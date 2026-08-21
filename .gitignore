@@ -1,0 +1,11 @@
+# 备份文件不入库
+*.bak
+*.bak.*
+*~
+# 内部工作目录
+.workbuddy/
+# 依赖（如后续引入）
+node_modules/
+# 系统文件
+Thumbs.db
+.DS_Store
