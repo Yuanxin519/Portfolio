@@ -2275,7 +2275,6 @@
       var sidePhotos = document.querySelector('.hero-side-photos');
       var fadeTargets = document.querySelectorAll('.avatar-interactive, .hero-side-photos .side-photo');
       if (!about) return;
-      var ticking = false;
       // about 的绝对位置只需在加载/尺寸变化时计算一次，避免每帧触发布局刷新
       var aboutTop = about.getBoundingClientRect().top + (window.scrollY || window.pageYOffset);
 
@@ -2294,10 +2293,11 @@
         var pe = op < 0.15 ? 'none' : '';
         if (photoCol) photoCol.style.pointerEvents = pe;
         if (sidePhotos) sidePhotos.style.pointerEvents = pe;
-        ticking = false;
       }
+      // 同步执行：在 scroll 事件里直接更新，与平滑滚动同帧生效，
+      // 避免「页面先上移、transform 后一帧才补上」造成的 1 帧滞后与开头跳动
       function onScroll() {
-        if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
+        update();
       }
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', function () {
