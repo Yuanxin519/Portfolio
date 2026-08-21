@@ -176,7 +176,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      transform: translateX(-100px);
+      will-change: transform;
     }
 
     /* ===== 右侧竖排照片 ===== */
@@ -186,6 +186,7 @@
       align-items: center;
       justify-content: center;
       gap: 30px;
+      will-change: transform;
     }
 
     .side-photo {
@@ -197,6 +198,7 @@
       box-shadow: none;
       background: transparent;
       transition: transform 0.4s ease;
+      will-change: opacity;
     }
 
     .side-photo:nth-child(1),
@@ -261,6 +263,7 @@
       aspect-ratio: 3/4;
       cursor: pointer;
       z-index: 1;
+      will-change: opacity;
     }
 
     .avatar-interactive img {
@@ -271,7 +274,6 @@
       object-fit: contain;
       object-position: center bottom;
       transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-      filter: drop-shadow(0 20px 50px rgba(0,0,0,0.25));
       animation: avatarFloat 5s ease-in-out infinite;
       will-change: transform;
     }
@@ -2274,14 +2276,15 @@
       var fadeTargets = document.querySelectorAll('.avatar-interactive, .hero-side-photos .side-photo');
       if (!about) return;
       var ticking = false;
+      // about 的绝对位置只需在加载/尺寸变化时计算一次，避免每帧触发布局刷新
+      var aboutTop = about.getBoundingClientRect().top + (window.scrollY || window.pageYOffset);
 
       function update() {
         var scrollY = window.scrollY || window.pageYOffset;
-        var aboutTop = about.getBoundingClientRect().top + scrollY;
         var p = aboutTop > 0 ? Math.min(1, Math.max(0, scrollY / aboutTop)) : 1;
         var op = 1 - p;
-        // 钉屏：用 +scrollY 抵消页面上移，使图片停留在初始屏幕位置
-        if (photoCol) photoCol.style.transform = 'translateX(-100px) translateY(' + scrollY + 'px)';
+        // 钉屏：用 +scrollY 抵消页面上移，使图片停留在初始屏幕位置（仅垂直，左右对称）
+        if (photoCol) photoCol.style.transform = 'translateY(' + scrollY + 'px)';
         if (sidePhotos) sidePhotos.style.transform = 'translateY(' + scrollY + 'px)';
         // 仅透明度变化
         for (var i = 0; i < fadeTargets.length; i++) {
@@ -2297,7 +2300,10 @@
         if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
       }
       window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', update);
+      window.addEventListener('resize', function () {
+        aboutTop = about.getBoundingClientRect().top + (window.scrollY || window.pageYOffset);
+        update();
+      });
       update();
     })();
 
