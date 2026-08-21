@@ -2309,10 +2309,12 @@
       function pinToCell() {
         if (!isPinEnabled()) {
           photoPin.style.position = 'static';
+          photoPin.style.width = '';
           photoPin.style.left = '';
           photoPin.style.top = '';
           photoPin.style.transform = '';
           sidePin.style.position = 'static';
+          sidePin.style.width = '';
           sidePin.style.left = '';
           sidePin.style.top = '';
           sidePin.style.transform = '';
@@ -2326,11 +2328,13 @@
         var sr = sideCol.getBoundingClientRect();
 
         photoPin.style.position = 'fixed';
+        photoPin.style.width = pr.width + 'px';
         photoPin.style.left = (pr.left + pr.width / 2) + 'px';
         photoPin.style.top = (pr.top + pr.height / 2 + scrollY) + 'px';
         photoPin.style.transform = 'translate(-50%, -50%)';
 
         sidePin.style.position = 'fixed';
+        sidePin.style.width = sr.width + 'px';
         sidePin.style.left = (sr.left + sr.width / 2) + 'px';
         sidePin.style.top = (sr.top + sr.height / 2 + scrollY) + 'px';
         sidePin.style.transform = 'translate(-50%, -50%)';
