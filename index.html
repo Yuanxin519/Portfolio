@@ -2310,5 +2310,68 @@
 
   </script>
 
+  <script>
+    // ========== 整站平滑滚动（滚轮缓动，保持 window.scrollY 真实，兼容 Hero 钉屏） ==========
+    (function () {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) return; // 尊重系统“减少动态效果”偏好，不做缓动
+
+      var lerp = function (a, b, t) { return a + (b - a) * t; };
+      var ease = 0.12;    // 缓动系数：越小越柔、越大越跟手
+      var target = window.scrollY || window.pageYOffset || 0;
+      var current = target;
+      var running = false;
+
+      function maxScroll() {
+        return Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      }
+
+      function step() {
+        current = lerp(current, target, ease);
+        if (Math.abs(target - current) < 0.4) {
+          current = target;
+          window.scrollTo({ top: current, left: 0, behavior: 'instant' });
+          running = false;
+          return;
+        }
+        window.scrollTo({ top: current, left: 0, behavior: 'instant' });
+        window.requestAnimationFrame(step);
+      }
+
+      function onWheel(e) {
+        if (e.ctrlKey) return;                 // 不拦截 Ctrl+滚轮（浏览器缩放）
+        var delta = e.deltaY || (e.detail * 40) || 0;
+        if (!delta) return;
+        e.preventDefault();                     // 接管滚轮，避免原生“一格一顿”
+        target = Math.max(0, Math.min(maxScroll(), target + delta));
+        if (!running) { running = true; window.requestAnimationFrame(step); }
+      }
+
+      // 拖滚动条 / 键盘 / 原生锚点等其它方式滚动时，同步目标，避免与缓动冲突
+      window.addEventListener('scroll', function () {
+        if (!running) { target = window.scrollY || window.pageYOffset; current = target; }
+      }, { passive: true });
+
+      // 站内锚点（导航）点击 → 同样平滑滚动到目标
+      document.addEventListener('click', function (e) {
+        var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
+        if (!a) return;
+        var id = a.getAttribute('href');
+        if (!id || id.length < 2 || id === '#') return;
+        var el = document.querySelector(id);
+        if (!el) return;
+        e.preventDefault();
+        var top = el.getBoundingClientRect().top + (window.scrollY || window.pageYOffset);
+        target = Math.max(0, Math.min(maxScroll(), top));
+        if (!running) { running = true; window.requestAnimationFrame(step); }
+      });
+
+      window.addEventListener('wheel', onWheel, { passive: false });
+      window.addEventListener('resize', function () {
+        target = Math.max(0, Math.min(maxScroll(), target));
+      }, { passive: true });
+    })();
+  </script>
+
 </body>
 </html>
