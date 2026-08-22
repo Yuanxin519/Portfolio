@@ -1675,7 +1675,18 @@
       /* — Footer compact — */
       .footer { padding: 40px 16px; }
     }
-  </style>
+  
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+      .reveal, .reveal-up, .reveal-glitch { opacity: 1 !important; transform: none !important; }
+    }
+
+</style>
 </head>
 <body>
   <style>
@@ -2020,7 +2031,7 @@
         <a href="resume.pdf" class="footer-link" target="_blank">Resume</a>
       </div>
       <div class="copyright">
-        © 2025 Yu Yuanxin. All rights reserved.
+        © 2026 Yu Yuanxin. All rights reserved.
       </div>
     </div>
   </footer>
