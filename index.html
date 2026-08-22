@@ -314,39 +314,53 @@
       animation: floorShadowBreathe 5s ease-in-out infinite;
     }
 
-    .hero-scroll-hint {
-      position: absolute;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
+    /* ========== TOP NAV ========== */
+    .top-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 12px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
+      justify-content: space-between;
+      padding: 14px 32px;
+      background: rgba(246,243,237,0);
+      border-bottom: 1px solid transparent;
+      transition: background 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease;
+      font-family: 'Space Grotesk', 'Noto Serif SC', sans-serif;
+    }
+    .top-nav.scrolled {
+      background: rgba(246,243,237,0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(45,42,38,0.08);
+    }
+    .nav-logo {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 13px;
       font-weight: 500;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.02em;
+    }
+    .nav-links a {
       color: var(--text-muted);
       text-decoration: none;
-      transition: color 0.3s;
-      z-index: 2;
+      transition: color 0.2s;
+      white-space: nowrap;
     }
-
-    .hero-scroll-hint:hover {
-      color: var(--accent);
-    }
-
-    .scroll-line {
-      width: 1px;
-      height: 40px;
-      background: linear-gradient(to bottom, var(--text-muted), transparent);
-      animation: scrollPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes scrollPulse {
-      0%, 100% { opacity: 0.4; height: 40px; }
-      50% { opacity: 1; height: 50px; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-projects { display: inline-flex; gap: 18px; }
+    @media (max-width: 768px) {
+      .top-nav { padding: 12px 18px; }
+      .nav-projects { display: none; }
+      .nav-links { gap: 16px; }
     }
 
 
@@ -988,7 +1002,6 @@
     /* English / label text */
     .hero-eyebrow,
     .hero-name-en,
-    .hero-scroll-hint span,
     .hero-contact-btn,
     .hero-tag,
     .about-block-label,
@@ -1128,6 +1141,7 @@
       background: var(--bg);
       position: relative;
       border-top: 1px solid rgba(0,0,0,0.06);
+      --text-muted: #564B41;
     }
 
     .about-inner {
@@ -1194,7 +1208,7 @@
     }
     .about-profile-tagline {
       font-size: 0.95rem;
-      color: #7A6F64;
+      color: #564B41;
       line-height: 1.7;
       max-width: 480px;
     }
@@ -1749,6 +1763,23 @@
 </head>
 <body>
 
+  <nav class="top-nav" id="topNav">
+    <a href="#hero" class="nav-logo">于沅鑫</a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#bookshelf">Works</a>
+      <span class="nav-projects">
+        <a href="project-mycelium.html">Mycelium</a>
+        <a href="project-flood.html">Flood</a>
+        <a href="project-gameux.html">GameUX</a>
+        <a href="project-insurance.html">Insurance</a>
+        <a href="project-cosmic-creek.html">Space</a>
+        <a href="project-visual.html">Visual</a>
+        <a href="project-photo.html">Photo</a>
+      </span>
+    </div>
+  </nav>
+
   <!-- ========== PAGE 1: HERO ========== -->
   <section class="hero" id="hero">
     <div class="hero-grid">
@@ -1799,10 +1830,6 @@
       </div>
     </div>
 
-    <a href="#bookshelf" class="hero-scroll-hint">
-      <span>SCROLL</span>
-      <div class="scroll-line"></div>
-    </a>
   </section>
 
   <!-- ========== ABOUT CONTENT ========== -->
